@@ -88,6 +88,9 @@ class RestClient
             throw new RuntimeException("Rest Client Error: Service [$service_name] is not found in environment [{$this->environment}] config.");
         }
 
+        $this->printLine("--------");
+        $this->printLine("REST CLIENT SERVICE: " . $service_name . ", ENVIRONMENT: " . $this->environment);
+
         // get cache
         $minutes = $this->getConfig('oauth_tokens_cache_minutes', 10);
         if ($minutes > 0) {
@@ -212,6 +215,10 @@ class RestClient
     private function useOAuthTokenFromCache()
     {
         $this->oauth_tokens = \Cache::get($this->oauth_tokens_cache_key, []);
+        if (!empty($this->oauth_tokens)) {
+            $this->printLine("Using OAuth Tokens from cache:");
+            $this->printArray($this->oauth_tokens);
+        }
     }
 
     private function getOAuthToken($type)
