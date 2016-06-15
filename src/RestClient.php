@@ -343,7 +343,9 @@ class RestClient
 
     protected function printArray($array)
     {
-        print_r($array);
+        if ($this->debug_mode) {
+            print_r($array);
+        }
     }
 
 }
