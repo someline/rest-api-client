@@ -235,7 +235,7 @@ class RestClient
      * @param string $uri
      * @param array $query
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function get($uri, array $query = [], array $options = [])
     {
@@ -245,14 +245,14 @@ class RestClient
             'query' => $query,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function post($uri, array $data = [], array $options = [])
     {
@@ -261,7 +261,7 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
@@ -269,7 +269,7 @@ class RestClient
      * @param $uri
      * @param array $multipart
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function postMultipart($uri, array $multipart = [], array $options = [])
     {
@@ -278,14 +278,14 @@ class RestClient
             'multipart' => $multipart,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
      * @param $uri
      * @param array $data
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function postMultipartSimple($uri, array $data = [], array $options = [])
     {
@@ -301,14 +301,14 @@ class RestClient
             'multipart' => $multipart,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function head($uri, array $data = [], array $options = [])
     {
@@ -316,14 +316,14 @@ class RestClient
             'body' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function put($uri, array $data = [], array $options = [])
     {
@@ -332,14 +332,14 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function patch($uri, array $data = [], array $options = [])
     {
@@ -348,14 +348,14 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return $this
+     * @return Response
      */
     public function delete($uri, array $data = [], array $options = [])
     {
@@ -364,7 +364,7 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $this;
+        return $response;
     }
 
     /**
