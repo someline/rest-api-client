@@ -5,9 +5,20 @@ namespace Libern\Rest;
 use GuzzleHttp\Client;
 use Illuminate\Http\Response;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 
 class RestClient
 {
+
+    /**
+     * @var array
+     */
+    protected $service_config;
+
+    /**
+     * @var array
+     */
+    protected $shared_service_config;
 
     /**
      * @var Psr\Http\Message\ResponseInterface
@@ -40,27 +51,87 @@ class RestClient
     protected $debug_mode = false;
 
     /**
-     * Create a new Skeleton Instance
+     * @var string
      */
-    public function __construct()
+    protected $environment;
+
+    /**
+     * Create a new RestClient Instance
+     * @param $service_name
+     */
+    public function __construct($service_name = null)
     {
+        $this->environment = $this->getConfig('environment', 'production');
+        $this->shared_service_config = $this->getConfig('shared_service_config');
+        $this->debug_mode = $this->getConfig('debug_mode');
+        $services = $this->getConfig('services');
+
+        // use default service name
+        if (empty($service_name)) {
+            $service_name = $this->getConfig('default_service_name');
+        }
+
+        // choose service environment
+        if (!isset($services[$this->environment])) {
+            throw new RuntimeException("Rest Client Error: Service for environment [{$this->environment}] is not found in config.");
+        }
+        $services = $services[$this->environment];
+
+        // check service configs
+        if (!isset($services[$service_name])) {
+            throw new RuntimeException("Rest Client Error: Service [$service_name] is not found in environment [{$this->environment}] config.");
+        }
+
+        $this->setServiceConfig($services[$service_name]);
+
         $this->setUp();
+    }
+
+    public function getConfig($key, $default = null)
+    {
+        return config("rest-client.$key");
+    }
+
+    private function setServiceConfig($service_config)
+    {
+        $shared_service_config = $this->shared_service_config;
+
+        $combined_service_config = $service_config;
+        foreach ($shared_service_config as $key => $config) {
+            if (is_array($config) && isset($combined_service_config[$key])) {
+                $combined_service_config[$key] = array_merge($config, $combined_service_config[$key]);
+            } else if (!isset($combined_service_config[$key])) {
+                $combined_service_config[$key] = $config;
+            }
+        }
+
+        $this->service_config = $combined_service_config;
+    }
+
+    public function getServiceConfig($key)
+    {
+        return $this->service_config[$key];
     }
 
     public function setUp()
     {
         $this->client = new Client([
-            'base_uri' => 'http://someline-starter.app/api/',
+            'base_uri' => $this->getServiceConfig('base_uri'),
             'exceptions' => false,
         ]);
     }
 
+    /**
+     * @param boolean $debug_mode
+     */
+    public function setDebugMode($debug_mode)
+    {
+        $this->debug_mode = $debug_mode;
+    }
+
     protected function getClientData()
     {
-        return [
-            'client_id' => 'SomelineFvGXRmBv',
-            'client_secret' => 'WFYBPbkOBv7hTby8vGL2SPOOq2GKYQdSIDGXcLsS',
-        ];
+        return $this->getServiceConfig('oauth2_credentials');
     }
 
     protected function getOAuthUserCredentialsData()
@@ -73,17 +144,15 @@ class RestClient
 
     protected function postRequestAccessToken($grant_type, $data)
     {
-        return $this->post('oauth/access_token', array_merge($data, [
+        $url = $this->getServiceConfig('oauth2_access_token_url');
+        return $this->post($url, array_merge($data, [
             'grant_type' => $grant_type,
         ]));
     }
 
     private function configureOptions($options)
     {
-        $headers = [
-            'User-Agent' => 'someline-testing/1.0',
-            'Accept' => 'application/x.someline.v1+json',
-        ];
+        $headers = $this->getServiceConfig('headers');
 
         if ($this->use_oauth_token) {
             $headers['Authorization'] = 'Bearer ' . $this->getOAuthToken($this->use_oauth_token);
@@ -116,12 +185,13 @@ class RestClient
 
     private function getOAuthToken($type)
     {
+        $grant_types = $this->getServiceConfig('oauth2_grant_types');
         if (!isset($this->oauth_tokens[$type])) {
             if ($type == self::TOKEN_TYPE_CLIENT) {
-                $this->postRequestAccessToken('client_credentials',
+                $this->postRequestAccessToken($grant_types['client_credentials'],
                     array_merge($this->getClientData(), []));
             } else if ($type == self::TOKEN_TYPE_USER) {
-                $this->postRequestAccessToken('password',
+                $this->postRequestAccessToken($grant_types['password'],
                     array_merge($this->getClientData(), $this->getOAuthUserCredentialsData()));
             }
             $data = $this->getResponseData();
@@ -142,21 +212,23 @@ class RestClient
     {
         $this->getOAuthToken($type);
         $this->use_oauth_token = $type;
+        return $this;
     }
 
     public function withOAuthTokenTypeUser()
     {
-        $this->withOAuthToken(self::TOKEN_TYPE_USER);
+        return $this->withOAuthToken(self::TOKEN_TYPE_USER);
     }
 
     public function withOAuthTokenTypeClient()
     {
-        $this->withOAuthToken(self::TOKEN_TYPE_CLIENT);
+        return $this->withOAuthToken(self::TOKEN_TYPE_CLIENT);
     }
 
     public function withoutOAuthToken()
     {
         $this->use_oauth_token = null;
+        return $this;
     }
 
     /**
@@ -322,24 +394,15 @@ class RestClient
         }
     }
 
-    /**
-     * @param $user_id
-     * @return mixed
-     */
-    public function loginUsingId($user_id)
-    {
-        return \Auth::loginUsingId($user_id);
-    }
-
     public function printResponseData()
     {
-        $this->printArray($this->getResponseData());
+        print_r($this->getResponseData());
         return $this;
     }
 
     public function printResponseOriginContent()
     {
-        $this->printArray((string)$this->response->getOriginalContent());
+        print_r((string)$this->response->getOriginalContent());
         return $this;
     }
 
