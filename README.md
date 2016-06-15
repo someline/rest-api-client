@@ -36,6 +36,10 @@ php artisan vendor:publish
 
 ``` php
 $restClient = new \Libern\Rest\RestClient();
+$restClient->setOAuthUserCredentials([
+    'username' => 'libern@someline.com',
+    'password' => 'Abc12345',
+]);
 $restClient->withOAuthTokenTypeUser();
 $response = $restClient->get("users");
 if ($response->getStatusCode() == 200) {
@@ -43,6 +47,7 @@ if ($response->getStatusCode() == 200) {
 } else {
     $restClient->printResponseOriginContent();
 }
+$this->assertEquals($response->getStatusCode(), 200);
 ```
 
 ## Testing
