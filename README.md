@@ -20,8 +20,14 @@ $ composer require libern/someline-starter-api-client
 ## Usage
 
 ``` php
-$restClient = new Libern\Rest\RestClient();
-echo $restClient->echoPhrase('Hello, libern!');
+$restClient = new \Libern\Rest\RestClient();
+$restClient->withOAuthTokenTypeUser();
+$response = $restClient->get("users");
+if ($response->getStatusCode() == 200) {
+    $responseData = $restClient->getResponseData();
+} else {
+    $restClient->printResponseOriginContent();
+}
 ```
 
 ## Testing
