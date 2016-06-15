@@ -26,11 +26,13 @@ Add Service Provider to `config/app.php`
     ],
 ```
 
-Publishing config file
+Publishing config file. 
 
 ``` bash
 php artisan vendor:publish
 ```
+
+After published, config file for Rest Client is `config/rest-client.php`, you will need to config it to use Rest Client.
 
 ## Usage
 
