@@ -127,8 +127,12 @@ class RestClient
 
     public function setUp()
     {
+        $base_uri = $this->getServiceConfig('base_uri');
+        if (!ends_with($base_uri, '/')) {
+            $base_uri .= '/';
+        }
         $this->client = new Client([
-            'base_uri' => $this->getServiceConfig('base_uri'),
+            'base_uri' => $base_uri,
             'exceptions' => false,
         ]);
     }
