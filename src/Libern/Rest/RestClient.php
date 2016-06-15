@@ -101,7 +101,7 @@ class RestClient
 
     public function getConfig($key, $default = null)
     {
-        return config("rest-client.$key");
+        return config("rest-client.$key", $default);
     }
 
     private function setServiceConfig($service_config)
