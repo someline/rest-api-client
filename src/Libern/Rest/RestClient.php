@@ -131,6 +131,7 @@ class RestClient
         if (!ends_with($base_uri, '/')) {
             $base_uri .= '/';
         }
+        $this->printLine("REST CLIENT BASE URI: " . $base_uri);
         $this->client = new Client([
             'base_uri' => $base_uri,
             'exceptions' => false,
@@ -456,6 +457,13 @@ class RestClient
     {
         print_r((string)$this->response->getOriginalContent());
         return $this;
+    }
+
+    protected function printLine($string)
+    {
+        if ($this->debug_mode) {
+            echo $string . "\n";
+        }
     }
 
     protected function printArray($array)

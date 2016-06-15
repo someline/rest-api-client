@@ -11,12 +11,7 @@ return array(
     /**
      * Debug mode for showing logs
      */
-    'debug_mode' => false,
-
-    /**
-     * Default Service
-     */
-    'default_service_name' => 'someline-starter',
+    'debug_mode' => env('APP_DEBUG', false),
 
     /**
      * Access Token cache time
@@ -48,16 +43,22 @@ return array(
     ],
 
     /**
+     * Default Service
+     */
+    'default_service_name' => 'someline-starter',
+
+    /**
      * Services
      */
     'services' => [
 
+        // environment: dev
         'dev' => [
 
             // Someline Starter API Service
             'someline-starter' => [
 
-                'base_uri' => 'http://someline-starter.app/api/',
+                'base_uri' => 'http://dev.someline-starter.app/api/',
 
                 'headers' => [
                     'Accept' => 'application/x.someline.v1+json',
@@ -67,6 +68,7 @@ return array(
 
         ],
 
+        // environment: dev
         'production' => [
 
             // Someline Starter API Service
