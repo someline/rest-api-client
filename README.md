@@ -13,13 +13,13 @@ Someline Starter API Client is a client for accessing APIs created using [Someli
 
 ### Via Composer
 
-1. Install composer package to your laravel project
+Install composer package to your laravel project
 
 ``` bash
-$ composer require libern/someline-starter-api-client
+composer require libern/someline-starter-api-client
 ```
 
-2. Add Service Provider to `config/app.php`
+Add Service Provider to `config/app.php`
 
 ``` php
     'providers' => [
@@ -29,10 +29,10 @@ $ composer require libern/someline-starter-api-client
     ],
 ```
 
-3. Publish config file
+Publishing config file
 
 ``` bash
-$ php artisan vendor:publish
+php artisan vendor:publish
 ```
 
 ## Usage
@@ -51,7 +51,7 @@ if ($response->getStatusCode() == 200) {
 ## Testing
 
 ``` bash
-$ phpunit
+phpunit
 ```
 
 ## Contributing
