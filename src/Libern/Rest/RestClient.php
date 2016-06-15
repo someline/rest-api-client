@@ -442,7 +442,7 @@ class RestClient
             if ($responseData) {
                 $this->printArray($responseData);
             } else {
-                echo $this->getResponse();
+                $this->printLine($this->getResponse());
             }
         }
     }
