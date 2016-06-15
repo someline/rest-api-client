@@ -2,14 +2,18 @@
 
 namespace Libern\Rest\Test;
 
+use Libern\Rest\RestClient;
+
 class RestTest extends TestCase
 {
 
-    public function testEchoPhrase()
+    public function testGetUsers()
     {
-        $restClient = new \Libern\Rest\RestClient();
-        $result = $restClient->echoPhrase('Hello, libern!');
-        $this->assertEquals($result, 'Hello, libern!');
+        $restClient = new RestClient();
+        $restClient->withOAuthTokenTypeUser();
+        $restClient->get('users');
+        $restClient->printResponseData();
+        $this->assertEquals('200', '200');
     }
 
 }
