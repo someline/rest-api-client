@@ -19,6 +19,12 @@ return array(
     'default_service_name' => 'someline-starter',
 
     /**
+     * Access Token cache time
+     * Set 0 to disable cache of access tokens
+     */
+    'oauth_tokens_cache_minutes' => 10,
+
+    /**
      * Shared config for services
      */
     'shared_service_config' => [

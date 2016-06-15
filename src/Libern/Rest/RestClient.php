@@ -9,6 +9,10 @@ use RuntimeException;
 
 class RestClient
 {
+    /**
+     * @var string
+     */
+    protected $oauth_tokens_cache_key = 'someline-starter-api-client.oauth_tokens';
 
     /**
      * @var array
@@ -84,6 +88,12 @@ class RestClient
             throw new RuntimeException("Rest Client Error: Service [$service_name] is not found in environment [{$this->environment}] config.");
         }
 
+        // get cache
+        $minutes = $this->getConfig('oauth_tokens_cache_minutes', 10);
+        if ($minutes > 0) {
+            $this->useOAuthTokenFromCache();
+        }
+
         $this->setServiceConfig($services[$service_name]);
 
         $this->setUp();
@@ -136,7 +146,7 @@ class RestClient
         return $this->getServiceConfig('oauth2_credentials');
     }
 
-    protected function setOAuthUserCredentialsData($oauth_user_credentials)
+    public function setOAuthUserCredentials($oauth_user_credentials)
     {
 //        $oauth_user_credentials = [
 //            'username' => 'libern@someline.com',
@@ -148,7 +158,7 @@ class RestClient
     protected function getOAuthUserCredentialsData()
     {
         if (empty($this->oauth_user_credentials)) {
-            throw new RuntimeException('oauth_user_credentials is not set!');
+            throw new RuntimeException('Please set "oauth_user_credentials" by calling setOAuthUserCredentialsData()!');
         }
         return $this->oauth_user_credentials;
     }
@@ -194,6 +204,11 @@ class RestClient
         return $this->getResponseAsJson();
     }
 
+    private function useOAuthTokenFromCache()
+    {
+        $this->oauth_tokens = \Cache::get($this->oauth_tokens_cache_key, []);
+    }
+
     private function getOAuthToken($type)
     {
         $grant_types = $this->getServiceConfig('oauth2_grant_types');
@@ -205,8 +220,16 @@ class RestClient
                 $this->postRequestAccessToken($grant_types['password'],
                     array_merge($this->getClientData(), $this->getOAuthUserCredentialsData()));
             }
+            if ($this->getResponse()->getStatusCode() != 200) {
+                throw new RuntimeException('Failed to get access token!');
+            }
+
             $data = $this->getResponseData();
-            $this->setOAuthToken($type, $data['access_token']);
+            if (!isset($data['access_token'])) {
+                throw new RuntimeException('"access_token" is not exists in the response data!');
+            }
+            $access_token = $data['access_token'];
+            $this->setOAuthToken($type, $access_token);
         }
         return $this->oauth_tokens[$type];
     }
@@ -216,7 +239,21 @@ class RestClient
         if ($this->debug_mode) {
             echo "SET OAuthToken[$type]: $access_token\n\n";
         }
-        $this->oauth_tokens[$type] = $access_token;
+
+        if (empty($access_token)) {
+            unset($this->oauth_tokens[$type]);
+        } else {
+            $this->oauth_tokens[$type] = $access_token;
+        }
+
+        // update to cache
+        $minutes = $this->getConfig('oauth_tokens_cache_minutes', 10);
+        \Cache::put($this->oauth_tokens_cache_key, $this->oauth_tokens, $minutes);
+    }
+
+    private function resetOAuthTokenTypeUser()
+    {
+        $this->setOAuthToken(self::TOKEN_TYPE_USER, null);
     }
 
     public function withOAuthToken($type)
