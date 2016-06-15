@@ -2,9 +2,6 @@
 
 [![Latest Version](https://img.shields.io/github/release/libern/someline-starter-api-client.svg?style=flat-square)](https://github.com/libern/someline-starter-api-client/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/libern/someline-starter-api-client/master.svg?style=flat-square)](https://travis-ci.org/libern/someline-starter-api-client)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/libern/someline-starter-api-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/libern/someline-starter-api-client/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/libern/someline-starter-api-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/libern/someline-starter-api-client)
 [![Total Downloads](https://img.shields.io/packagist/dt/libern/someline-starter-api-client.svg?style=flat-square)](https://packagist.org/packages/libern/someline-starter-api-client)
 
 Someline Starter API Client is a client for accessing APIs created using [Someline Starter](https://github.com/libern/someline-starter) framework.
@@ -13,13 +10,13 @@ Someline Starter API Client is a client for accessing APIs created using [Someli
 
 ### Via Composer
 
-1. Install composer package to your laravel project
+Install composer package to your laravel project
 
 ``` bash
-$ composer require libern/someline-starter-api-client
+composer require libern/someline-starter-api-client
 ```
 
-2. Add Service Provider to `config/app.php`
+Add Service Provider to `config/app.php`
 
 ``` php
     'providers' => [
@@ -29,10 +26,10 @@ $ composer require libern/someline-starter-api-client
     ],
 ```
 
-3. Publish config file
+Publishing config file
 
 ``` bash
-$ php artisan vendor:publish
+php artisan vendor:publish
 ```
 
 ## Usage
@@ -51,7 +48,7 @@ if ($response->getStatusCode() == 200) {
 ## Testing
 
 ``` bash
-$ phpunit
+phpunit
 ```
 
 ## Contributing
