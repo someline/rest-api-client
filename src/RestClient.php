@@ -132,7 +132,9 @@ class RestClient
 
     public function setOAuthToken($type, $access_token)
     {
-        echo "SET OAuthToken[$type]: $access_token\n\n";
+        if ($this->debug_mode) {
+            echo "SET OAuthToken[$type]: $access_token\n\n";
+        }
         $this->oauth_tokens[$type] = $access_token;
     }
 
