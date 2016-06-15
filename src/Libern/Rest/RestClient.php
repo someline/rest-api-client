@@ -45,6 +45,8 @@ class RestClient
 
     protected $use_oauth_token = null;
 
+    protected $oauth_user_credentials = null;
+
     /**
      * @var bool
      */
@@ -134,12 +136,21 @@ class RestClient
         return $this->getServiceConfig('oauth2_credentials');
     }
 
+    protected function setOAuthUserCredentialsData($oauth_user_credentials)
+    {
+//        $oauth_user_credentials = [
+//            'username' => 'libern@someline.com',
+//            'password' => 'Abc12345',
+//        ];
+        $this->oauth_user_credentials = $oauth_user_credentials;
+    }
+
     protected function getOAuthUserCredentialsData()
     {
-        return [
-            'username' => 'libern@someline.com',
-            'password' => 'Abc12345',
-        ];
+        if (empty($this->oauth_user_credentials)) {
+            throw new RuntimeException('oauth_user_credentials is not set!');
+        }
+        return $this->oauth_user_credentials;
     }
 
     protected function postRequestAccessToken($grant_type, $data)
