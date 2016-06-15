@@ -102,11 +102,19 @@ class RestClient
         $this->setUp();
     }
 
+    /**
+     * @param $key
+     * @param null $default
+     * @return mixed
+     */
     public function getConfig($key, $default = null)
     {
         return config("rest-client.$key", $default);
     }
 
+    /**
+     * @param $service_config
+     */
     private function setServiceConfig($service_config)
     {
         $shared_service_config = $this->shared_service_config;
@@ -123,11 +131,18 @@ class RestClient
         $this->service_config = $combined_service_config;
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     */
     public function getServiceConfig($key)
     {
         return $this->service_config[$key];
     }
 
+    /**
+     *  Set Up Client
+     */
     public function setUp()
     {
         $base_uri = $this->getServiceConfig('base_uri');
@@ -149,11 +164,17 @@ class RestClient
         $this->debug_mode = $debug_mode;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getClientData()
     {
         return $this->getServiceConfig('oauth2_credentials');
     }
 
+    /**
+     * @param $oauth_user_credentials
+     */
     public function setOAuthUserCredentials($oauth_user_credentials)
     {
 //        $oauth_user_credentials = [
@@ -163,6 +184,9 @@ class RestClient
         $this->oauth_user_credentials = $oauth_user_credentials;
     }
 
+    /**
+     * @return null
+     */
     protected function getOAuthUserCredentialsData()
     {
         if (empty($this->oauth_user_credentials)) {
@@ -171,6 +195,11 @@ class RestClient
         return $this->oauth_user_credentials;
     }
 
+    /**
+     * @param $grant_type
+     * @param $data
+     * @return Response
+     */
     protected function postRequestAccessToken($grant_type, $data)
     {
         $url = $this->getServiceConfig('oauth2_access_token_url');
@@ -179,6 +208,10 @@ class RestClient
         ]));
     }
 
+    /**
+     * @param $options
+     * @return array
+     */
     private function configureOptions($options)
     {
         $headers = $this->getServiceConfig('headers');
@@ -197,21 +230,34 @@ class RestClient
         ], $options);
     }
 
+    /**
+     * @return Response
+     */
     public function getResponse()
     {
         return $this->response;
     }
 
+    /**
+     * @param bool $assoc
+     * @return mixed
+     */
     public function getResponseAsJson($assoc = true)
     {
         return json_decode($this->getResponse()->getContent(), $assoc);
     }
 
+    /**
+     * @return mixed
+     */
     public function getResponseData()
     {
         return $this->getResponseAsJson();
     }
 
+    /**
+     *  Use OAuth Tokens from Cache
+     */
     private function useOAuthTokenFromCache()
     {
         $this->oauth_tokens = \Cache::get($this->oauth_tokens_cache_key, []);
@@ -221,6 +267,10 @@ class RestClient
         }
     }
 
+    /**
+     * @param $type
+     * @return mixed
+     */
     private function getOAuthToken($type)
     {
         $grant_types = $this->getServiceConfig('oauth2_grant_types');
@@ -246,6 +296,10 @@ class RestClient
         return $this->oauth_tokens[$type];
     }
 
+    /**
+     * @param $type
+     * @param $access_token
+     */
     public function setOAuthToken($type, $access_token)
     {
         if ($this->debug_mode) {
@@ -263,11 +317,10 @@ class RestClient
         \Cache::put($this->oauth_tokens_cache_key, $this->oauth_tokens, $minutes);
     }
 
-    private function resetOAuthTokenTypeUser()
-    {
-        $this->setOAuthToken(self::TOKEN_TYPE_USER, null);
-    }
-
+    /**
+     * @param $type
+     * @return $this
+     */
     public function withOAuthToken($type)
     {
         $this->getOAuthToken($type);
@@ -275,16 +328,25 @@ class RestClient
         return $this;
     }
 
+    /**
+     * @return RestClient
+     */
     public function withOAuthTokenTypeUser()
     {
         return $this->withOAuthToken(self::TOKEN_TYPE_USER);
     }
 
+    /**
+     * @return RestClient
+     */
     public function withOAuthTokenTypeClient()
     {
         return $this->withOAuthToken(self::TOKEN_TYPE_CLIENT);
     }
 
+    /**
+     * @return $this
+     */
     public function withoutOAuthToken()
     {
         $this->use_oauth_token = null;
@@ -454,18 +516,27 @@ class RestClient
         }
     }
 
+    /**
+     * @return $this
+     */
     public function printResponseData()
     {
         print_r($this->getResponseData());
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function printResponseOriginContent()
     {
         print_r((string)$this->response->getOriginalContent());
         return $this;
     }
 
+    /**
+     * @param $string
+     */
     protected function printLine($string)
     {
         if ($this->debug_mode) {
@@ -473,6 +544,9 @@ class RestClient
         }
     }
 
+    /**
+     * @param $array
+     */
     protected function printArray($array)
     {
         if ($this->debug_mode) {
