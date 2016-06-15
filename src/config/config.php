@@ -55,7 +55,6 @@ return array(
         // environment: dev
         'dev' => [
 
-            // Someline Starter API Service
             'someline-starter' => [
 
                 'base_uri' => 'http://dev.someline-starter.app/api/',
@@ -68,10 +67,9 @@ return array(
 
         ],
 
-        // environment: dev
+        // environment: production
         'production' => [
 
-            // Someline Starter API Service
             'someline-starter' => [
 
                 'base_uri' => 'http://someline-starter.app/api/',
