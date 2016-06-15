@@ -6,7 +6,7 @@ class RestClientTest extends TestCase
 
     public function testRestClient()
     {
-        $restClient = new \Libern\Rest\RestClient();
+        $restClient = new \Libern\Rest\RestClient('someline-starter');
         $restClient->setOAuthUserCredentials([
             'username' => 'libern@someline.com',
             'password' => 'Abc12345',

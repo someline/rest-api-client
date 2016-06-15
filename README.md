@@ -35,7 +35,7 @@ php artisan vendor:publish
 ## Usage
 
 ``` php
-$restClient = new \Libern\Rest\RestClient();
+$restClient = new \Libern\Rest\RestClient('someline-starter');
 $restClient->setOAuthUserCredentials([
     'username' => 'libern@someline.com',
     'password' => 'Abc12345',
