@@ -11,10 +11,28 @@ Someline Starter API Client is a client for accessing APIs created using [Someli
 
 ## Install
 
-Via Composer
+### Via Composer
+
+1. Install composer package to your laravel project
 
 ``` bash
 $ composer require libern/someline-starter-api-client
+```
+
+2. Add Service Provider to `config/app.php`
+
+``` php
+    'providers' => [
+        ...
+        Libern\Rest\RestClientServiceProvider::class,
+        ...
+    ],
+```
+
+3. Publish config file
+
+``` bash
+$ php artisan vendor:publish
 ```
 
 ## Usage
