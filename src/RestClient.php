@@ -1,8 +1,8 @@
 <?php
 
-namespace League\Skeleton;
+namespace Libern\Rest;
 
-class SkeletonClass
+class RestClient
 {
 
     /**
