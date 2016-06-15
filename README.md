@@ -1,30 +1,27 @@
-# League Skeleton
+# Someline Starter API Client
 
-[![Latest Version](https://img.shields.io/github/release/thephpleague/skeleton.svg?style=flat-square)](https://github.com/thephpleague/skeleton/releases)
+[![Latest Version](https://img.shields.io/github/release/libern/someline-starter-api-client.svg?style=flat-square)](https://github.com/libern/someline-starter-api-client/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/thephpleague/skeleton/master.svg?style=flat-square)](https://travis-ci.org/thephpleague/skeleton)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/thephpleague/skeleton.svg?style=flat-square)](https://scrutinizer-ci.com/g/thephpleague/skeleton/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/thephpleague/skeleton.svg?style=flat-square)](https://scrutinizer-ci.com/g/thephpleague/skeleton)
-[![Total Downloads](https://img.shields.io/packagist/dt/league/skeleton.svg?style=flat-square)](https://packagist.org/packages/league/skeleton)
+[![Build Status](https://img.shields.io/travis/libern/someline-starter-api-client/master.svg?style=flat-square)](https://travis-ci.org/libern/someline-starter-api-client)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/libern/someline-starter-api-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/libern/someline-starter-api-client/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/libern/someline-starter-api-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/libern/someline-starter-api-client)
+[![Total Downloads](https://img.shields.io/packagist/dt/libern/someline-starter-api-client.svg?style=flat-square)](https://packagist.org/packages/libern/someline-starter-api-client)
 
-**Note:** Replace `skeleton` with the correct package name in the above URLs, then delete this line.
-
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
+Someline Starter API Client is a client for accessing APIs created using [Someline Starter](https://github.com/libern/someline-starter) framework.
 
 ## Install
 
 Via Composer
 
 ``` bash
-$ composer require league/skeleton
+$ composer require libern/someline-starter-api-client
 ```
 
 ## Usage
 
 ``` php
-$skeleton = new League\Skeleton();
-echo $skeleton->echoPhrase('Hello, League!');
+$restClient = new Libern\Rest\RestClient();
+echo $restClient->echoPhrase('Hello, libern!');
 ```
 
 ## Testing
@@ -35,12 +32,12 @@ $ phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/thephpleague/:package_name/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/libern/someline-starter-api-client/blob/master/CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
-- [All Contributors](https://github.com/thephpleague/:package_name/contributors)
+- [Libern](https://github.com/libern)
+- [All Contributors](https://github.com/libern/someline-starter-api-client/contributors)
 
 ## License
 
