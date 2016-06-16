@@ -200,7 +200,7 @@ class RestClient
     /**
      * @param $grant_type
      * @param $data
-     * @return Response
+     * @return $this;
      */
     protected function postRequestAccessToken($grant_type, $data)
     {
@@ -230,31 +230,6 @@ class RestClient
         return array_merge([
             'headers' => $headers,
         ], $options);
-    }
-
-    /**
-     * @return Response
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * @param bool $assoc
-     * @return mixed
-     */
-    public function getResponseAsJson($assoc = true)
-    {
-        return json_decode($this->getResponse()->getContent(), $assoc);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResponseData()
-    {
-        return $this->getResponseAsJson();
     }
 
     /**
@@ -359,7 +334,7 @@ class RestClient
      * @param string $uri
      * @param array $query
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function get($uri, array $query = [], array $options = [])
     {
@@ -369,14 +344,14 @@ class RestClient
             'query' => $query,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function post($uri, array $data = [], array $options = [])
     {
@@ -385,7 +360,7 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
@@ -393,7 +368,7 @@ class RestClient
      * @param $uri
      * @param array $multipart
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function postMultipart($uri, array $multipart = [], array $options = [])
     {
@@ -402,14 +377,14 @@ class RestClient
             'multipart' => $multipart,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
      * @param $uri
      * @param array $data
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function postMultipartSimple($uri, array $data = [], array $options = [])
     {
@@ -425,14 +400,14 @@ class RestClient
             'multipart' => $multipart,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function head($uri, array $data = [], array $options = [])
     {
@@ -440,14 +415,14 @@ class RestClient
             'body' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function put($uri, array $data = [], array $options = [])
     {
@@ -456,14 +431,14 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function patch($uri, array $data = [], array $options = [])
     {
@@ -472,14 +447,14 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
      * @param string $uri
      * @param array $data
      * @param array $options
-     * @return Response
+     * @return $this;
      */
     public function delete($uri, array $data = [], array $options = [])
     {
@@ -488,7 +463,7 @@ class RestClient
             'form_params' => $data,
         ]));
         $this->setGuzzleResponse($response);
-        return $response;
+        return $this;
     }
 
     /**
@@ -515,6 +490,76 @@ class RestClient
             } else {
                 $this->printLine($this->getResponse());
             }
+        }
+    }
+
+    /**
+     * Response is success if status code is < 300
+     *
+     * @return bool
+     */
+    public function isResponseSuccess()
+    {
+        return $this->getResponse()->getStatusCode() < 300;
+    }
+
+    /**
+     * @param $status_code
+     * @return bool
+     */
+    public function isResponseStatusCode($status_code)
+    {
+        return $this->getResponse()->getStatusCode() == $status_code;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param bool $assoc
+     * @return mixed
+     */
+    public function getResponseAsJson($assoc = true)
+    {
+        return json_decode($this->getResponse()->getContent(), $assoc);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResponseData()
+    {
+        return $this->getResponseAsJson();
+    }
+
+    /**
+     * @return array|mixed|null
+     */
+    public function getResponseErrors()
+    {
+        $responseData = $this->getResponseData();
+        if (is_array($responseData) && isset($responseData['errors'])) {
+            return $responseData['errors'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return string|mixed|null
+     */
+    public function getResponseMessage()
+    {
+        $responseData = $this->getResponseData();
+        if (is_array($responseData) && isset($responseData['message'])) {
+            return $responseData['message'];
+        } else {
+            return null;
         }
     }
 
