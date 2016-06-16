@@ -64,12 +64,13 @@ class RestClient
     /**
      * Create a new RestClient Instance
      * @param $service_name
+     * @param null $debug_mode
      */
-    public function __construct($service_name = null)
+    public function __construct($service_name = null, $debug_mode = null)
     {
         $this->environment = $this->getConfig('environment', 'production');
         $this->shared_service_config = $this->getConfig('shared_service_config');
-        $this->debug_mode = $this->getConfig('debug_mode');
+        $this->debug_mode = $debug_mode !== null ? $debug_mode : $this->getConfig('debug_mode');
         $services = $this->getConfig('services');
 
         // use default service name
@@ -146,14 +147,15 @@ class RestClient
     public function setUp()
     {
         $base_uri = $this->getServiceConfig('base_uri');
+        $guzzle_client_config = $this->getConfig('guzzle_client_config', []);
         if (!ends_with($base_uri, '/')) {
             $base_uri .= '/';
         }
         $this->printLine("REST CLIENT BASE URI: " . $base_uri);
-        $this->client = new Client([
+        $this->client = new Client(array_merge($guzzle_client_config, [
             'base_uri' => $base_uri,
             'exceptions' => false,
-        ]);
+        ]));
     }
 
     /**

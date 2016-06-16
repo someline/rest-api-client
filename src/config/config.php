@@ -20,6 +20,13 @@ return array(
     'oauth_tokens_cache_minutes' => 10,
 
     /**
+     *  Guzzle Client Config
+     */
+    'guzzle_client_config' => [
+        'timeout' => 29.0,      // Request timeout: 29 secs
+    ],
+
+    /**
      * Shared config for services
      */
     'shared_service_config' => [
