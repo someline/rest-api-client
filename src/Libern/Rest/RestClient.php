@@ -219,7 +219,7 @@ class RestClient
         $headers = $this->getServiceConfig('headers');
 
         // add client ip to header
-        $clientIp = \Illuminate\Http\Request::getClientIp();
+        $clientIp = request()->getClientIp();
         $headers['X-Client-Ip'] = $clientIp;
         $headers['X-Forwarded-For'] = $clientIp;
 
