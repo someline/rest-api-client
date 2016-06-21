@@ -218,6 +218,11 @@ class RestClient
     {
         $headers = $this->getServiceConfig('headers');
 
+        // add client ip to header
+        $clientIp = \Illuminate\Http\Request::getClientIp();
+        $headers['X-Client-Ip'] = $clientIp;
+        $headers['X-Forwarded-For'] = $clientIp;
+
         if ($this->use_oauth_token) {
             $headers['Authorization'] = 'Bearer ' . $this->getOAuthToken($this->use_oauth_token);
         }
