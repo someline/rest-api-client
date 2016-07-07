@@ -9,6 +9,9 @@ use RuntimeException;
 
 class RestClient
 {
+    /**
+     * @var string
+     */
     private $service_name;
     /**
      * @var string
