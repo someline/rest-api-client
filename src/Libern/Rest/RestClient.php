@@ -78,7 +78,6 @@ class RestClient
         $services = $this->getConfig('services');
 
         // use default service name
-        $this->service_name = $service_name;
         if (empty($service_name)) {
             $service_name = $this->getConfig('default_service_name');
         }
