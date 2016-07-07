@@ -9,6 +9,7 @@ use RuntimeException;
 
 class RestClient
 {
+    private $service_name;
     /**
      * @var string
      */
@@ -74,9 +75,12 @@ class RestClient
         $services = $this->getConfig('services');
 
         // use default service name
+        $this->service_name = $service_name;
         if (empty($service_name)) {
             $service_name = $this->getConfig('default_service_name');
         }
+
+        $this->service_name = $service_name;
 
         // choose service environment
         if (!isset($services[$this->environment])) {
@@ -120,16 +124,45 @@ class RestClient
     {
         $shared_service_config = $this->shared_service_config;
 
-        $combined_service_config = $service_config;
-        foreach ($shared_service_config as $key => $config) {
+        $this->service_config = $this->mergeConfig($shared_service_config, $service_config);
+    }
+
+    /**
+     * @param $service_config
+     */
+    public function addServiceConfig(array $service_config)
+    {
+        $this->service_config = $this->mergeConfig($this->service_config, $service_config);
+    }
+
+    /**
+     * @param array $headers
+     */
+    public function addHeaders(array $headers)
+    {
+        $service_config['headers'] = $headers;
+        $this->addServiceConfig($service_config);
+    }
+
+    /**
+     *
+     * New Config will override Base Config if both present
+     *
+     * @param array $baseConfig
+     * @param array $newConfig
+     * @return array
+     */
+    private function mergeConfig($baseConfig = [], $newConfig = [])
+    {
+        $combined_service_config = $newConfig;
+        foreach ($baseConfig as $key => $config) {
             if (is_array($config) && isset($combined_service_config[$key])) {
                 $combined_service_config[$key] = array_merge($config, $combined_service_config[$key]);
             } else if (!isset($combined_service_config[$key])) {
                 $combined_service_config[$key] = $config;
             }
         }
-
-        $this->service_config = $combined_service_config;
+        return $combined_service_config;
     }
 
     /**
@@ -242,11 +275,19 @@ class RestClient
      */
     private function useOAuthTokenFromCache()
     {
-        $this->oauth_tokens = \Cache::get($this->oauth_tokens_cache_key, []);
+        $this->oauth_tokens = \Cache::get($this->getOauthTokensCacheKey(), []);
         if (!empty($this->oauth_tokens)) {
             $this->printLine("Using OAuth Tokens from cache:");
             $this->printArray($this->oauth_tokens);
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function getOauthTokensCacheKey()
+    {
+        return $this->oauth_tokens_cache_key . '.' . $this->service_name;
     }
 
     /**
@@ -296,7 +337,7 @@ class RestClient
 
         // update to cache
         $minutes = $this->getConfig('oauth_tokens_cache_minutes', 10);
-        \Cache::put($this->oauth_tokens_cache_key, $this->oauth_tokens, $minutes);
+        \Cache::put($this->getOauthTokensCacheKey(), $this->oauth_tokens, $minutes);
     }
 
     /**
