@@ -219,6 +219,7 @@ class RestClient
 //            'password' => 'Abc12345',
 //        ];
         $this->oauth_user_credentials = $oauth_user_credentials;
+        $this->useOAuthTokenFromCache();
     }
 
     /**
@@ -289,7 +290,12 @@ class RestClient
      */
     private function getOauthTokensCacheKey()
     {
-        return $this->oauth_tokens_cache_key . '.' . $this->service_name;
+        $user_hash = '';
+        if (!empty($this->oauth_user_credentials)) {
+            $user_hash = "." . sha1(serialize($this->oauth_user_credentials));
+        }
+        $cache_key = $this->oauth_tokens_cache_key . '.' . $this->service_name . '.' . $this->environment . $user_hash;
+        return $cache_key;
     }
 
     /**
