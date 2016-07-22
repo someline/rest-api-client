@@ -1,10 +1,14 @@
-# Someline Starter API Client
+# Someline Rest API Client
 
-[![Latest Version](https://img.shields.io/github/release/libern/someline-starter-api-client.svg?style=flat-square)](https://github.com/libern/someline-starter-api-client/releases)
+[![Latest Version](https://img.shields.io/github/release/someline/rest-api-client.svg?style=flat-square)](https://github.com/someline/rest-api-client/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/libern/someline-starter-api-client.svg?style=flat-square)](https://packagist.org/packages/libern/someline-starter-api-client)
+[![Total Downloads](https://img.shields.io/packagist/dt/someline/rest-api-client.svg?style=flat-square)](https://packagist.org/packages/someline/rest-api-client)
 
-Someline Starter API Client is a client for accessing APIs created using [Someline Starter](https://github.com/libern/someline-starter) framework.
+Someline Starter API Client is an elegant and smart Rest API Client with OAuth2 authentication support. 
+
+Build for Laravel and [Someline Starter](https://starter.someline.com). 
+
+It can be used for accessing APIs created using [Someline Starter](https://starter.someline.com) framework.
 
 ## Install
 
@@ -13,7 +17,7 @@ Someline Starter API Client is a client for accessing APIs created using [Someli
 Install composer package to your laravel project
 
 ``` bash
-composer require libern/someline-starter-api-client
+composer require someline/rest-api-client
 ```
 
 Add Service Provider to `config/app.php`
@@ -21,7 +25,7 @@ Add Service Provider to `config/app.php`
 ``` php
     'providers' => [
         ...
-        Libern\Rest\RestClientServiceProvider::class,
+        Someline\Rest\RestClientServiceProvider::class,
         ...
     ],
 ```
@@ -37,7 +41,7 @@ After published, config file for Rest Client is `config/rest-client.php`, you wi
 ## Usage
 
 ``` php
-$restClient = new \Libern\Rest\RestClient('someline-starter');
+$restClient = new \Someline\Rest\RestClient('someline-starter');
 
 $restClient->setOAuthUserCredentials([
     'username' => 'libern@someline.com',
@@ -64,12 +68,12 @@ phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/libern/someline-starter-api-client/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/someline/rest-api-client/blob/master/CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [Libern](https://github.com/libern)
-- [All Contributors](https://github.com/libern/someline-starter-api-client/contributors)
+- [Someline](https://github.com/libern)
+- [All Contributors](https://github.com/someline/rest-api-client/contributors)
 
 ## License
 
