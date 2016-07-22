@@ -16,7 +16,7 @@ class RestClient
     /**
      * @var string
      */
-    protected $oauth_tokens_cache_key = 'someline-starter-api-client.oauth_tokens';
+    protected $oauth_tokens_cache_key = 'someline-rest-api-client.oauth_tokens';
 
     /**
      * @var array
