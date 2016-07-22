@@ -1,6 +1,6 @@
 <?php
 
-namespace Libern\Rest;
+namespace Someline\Rest;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Response;

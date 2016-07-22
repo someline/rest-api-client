@@ -1,6 +1,6 @@
 <?php
 
-namespace Libern\Rest;
+namespace Someline\Rest;
 
 
 use Illuminate\Support\ServiceProvider;
