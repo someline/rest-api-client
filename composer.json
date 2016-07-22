@@ -1,19 +1,20 @@
 {
-  "name": "libern/someline-starter-api-client",
-  "description": "Rest API Client for Someline Starter",
+  "name": "someline/rest-api-client",
+  "description": "An elegant and smart Rest API Client with OAuth2 authentication support.",
   "keywords": [
     "rest",
     "api",
     "client",
-    "someline-starter"
+    "someline-starter",
+    "oauth2"
   ],
-  "homepage": "https://github.com/libern/someline-starter-api-client",
+  "homepage": "https://github.com/someline/rest-api-client",
   "license": "MIT",
   "authors": [
     {
       "name": "Libern Lin",
       "email": "libernlin@gmail.com",
-      "homepage": "https://www.someline.com"
+      "homepage": "https://www.someline.com/"
     }
   ],
   "require": {
@@ -26,12 +27,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Libern\\Rest\\": "src/Libern/Rest"
+      "Someline\\Rest\\": "src/Someline/Rest"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Libern\\Rest\\Test\\": "tests"
+      "Someline\\Rest\\Test\\": "tests"
     }
   },
   "extra": {
