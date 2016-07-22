@@ -1,12 +1,13 @@
 {
   "name": "someline/rest-api-client",
-  "description": "An elegant and smart Rest API Client with OAuth2 authentication support.",
+  "description": "An elegant and smart Rest API Client with OAuth2 authentication support. Build for Laravel and Someline Starter.",
   "keywords": [
     "rest",
     "api",
     "client",
     "someline-starter",
-    "oauth2"
+    "oauth2",
+    "laravel"
   ],
   "homepage": "https://github.com/someline/rest-api-client",
   "license": "MIT",
