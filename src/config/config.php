@@ -35,6 +35,8 @@ return array(
             'User-Agent' => 'someline-testing/1.0',
         ],
 
+        'api_url' => 'api/',
+
         'oauth2_credentials' => [
             'client_id' => '1',
             'client_secret' => 'EpAeMzdkzzstElFqROrn61NVfpQiZEbuE8bWA48t',
@@ -64,9 +66,19 @@ return array(
         // environment: dev
         'dev' => [
 
+            'local' => [
+
+                'base_uri' => 'http://someline-starter.app/',
+
+                'headers' => [
+                    'Accept' => 'application/x.someline.v1+json',
+                ],
+
+            ],
+
             'someline-starter' => [
 
-                'base_uri' => 'http://dev.someline-starter.app/api/',
+                'base_uri' => 'http://dev.someline-starter.app/',
 
                 'headers' => [
                     'Accept' => 'application/x.someline.v1+json',
@@ -81,7 +93,7 @@ return array(
 
             'someline-starter' => [
 
-                'base_uri' => 'http://someline-starter.app/api/',
+                'base_uri' => 'http://someline-starter.app/',
 
                 'headers' => [
                     'Accept' => 'application/x.someline.v1+json',

@@ -280,7 +280,7 @@ class RestClient
         $url = $this->getServiceConfig('oauth2_access_token_url');
         return $this->post($url, array_merge($data, [
             'grant_type' => $grant_type,
-        ]));
+        ]), [], false);
     }
 
     /**
@@ -441,9 +441,10 @@ class RestClient
      * @param string $uri
      * @param array $query
      * @param array $options
-     * @return $this;
+     * @param bool $api
+     * @return $this ;
      */
-    public function get($uri, array $query = [], array $options = [])
+    public function get($uri, array $query = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
         $this->printArray($options);
@@ -458,9 +459,10 @@ class RestClient
      * @param string $uri
      * @param array $data
      * @param array $options
+     * @param bool $api
      * @return $this;
      */
-    public function post($uri, array $data = [], array $options = [])
+    public function post($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
         $response = $this->client->post($uri, array_merge($options, [
@@ -475,9 +477,10 @@ class RestClient
      * @param $uri
      * @param array $multipart
      * @param array $options
+     * @param bool $api
      * @return $this;
      */
-    public function postMultipart($uri, array $multipart = [], array $options = [])
+    public function postMultipart($uri, array $multipart = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
         $response = $this->client->post($uri, array_merge($options, [
@@ -491,9 +494,10 @@ class RestClient
      * @param $uri
      * @param array $data
      * @param array $options
+     * @param bool $api
      * @return $this;
      */
-    public function postMultipartSimple($uri, array $data = [], array $options = [])
+    public function postMultipartSimple($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
         $multipart = [];
@@ -514,9 +518,10 @@ class RestClient
      * @param string $uri
      * @param array $data
      * @param array $options
+     * @param bool $api
      * @return $this;
      */
-    public function head($uri, array $data = [], array $options = [])
+    public function head($uri, array $data = [], array $options = [], $api = true)
     {
         $response = $this->client->head($uri, array_merge($options, [
             'body' => $data,
@@ -529,9 +534,10 @@ class RestClient
      * @param string $uri
      * @param array $data
      * @param array $options
+     * @param bool $api
      * @return $this;
      */
-    public function put($uri, array $data = [], array $options = [])
+    public function put($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
         $response = $this->client->put($uri, array_merge($options, [
@@ -545,9 +551,10 @@ class RestClient
      * @param string $uri
      * @param array $data
      * @param array $options
+     * @param bool $api
      * @return $this;
      */
-    public function patch($uri, array $data = [], array $options = [])
+    public function patch($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
         $response = $this->client->patch($uri, array_merge($options, [
@@ -561,9 +568,10 @@ class RestClient
      * @param string $uri
      * @param array $data
      * @param array $options
+     * @param bool $api
      * @return $this;
      */
-    public function delete($uri, array $data = [], array $options = [])
+    public function delete($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
         $response = $this->client->delete($uri, array_merge($options, [
