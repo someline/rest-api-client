@@ -58,6 +58,8 @@ class RestClient
 
     protected $oauth_user_credentials = null;
 
+    protected $use_cache_token = null;
+
     protected $oauth_grant_request_data = [
         self::GRANT_TYPE_CLIENT_CREDENTIALS => [],
         self::GRANT_TYPE_AUTHORIZATION_CODE => [],
@@ -110,9 +112,8 @@ class RestClient
 
         // get cache
         $minutes = $this->getConfig('oauth_tokens_cache_minutes', 10);
-        if ($minutes > 0) {
-            $this->useOAuthTokenFromCache();
-        }
+        $this->use_cache_token = $minutes > 0;
+        $this->useOAuthTokenFromCache();
 
         $this->setServiceConfig($services[$service_name]);
 
@@ -313,6 +314,10 @@ class RestClient
      */
     private function useOAuthTokenFromCache()
     {
+        if (!$this->use_cache_token) {
+            return;
+        }
+
         $this->oauth_tokens = \Cache::get($this->getOauthTokensCacheKey(), []);
         if (!empty($this->oauth_tokens)) {
             $this->printLine("Using OAuth Tokens from cache:");
