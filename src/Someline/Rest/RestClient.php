@@ -447,7 +447,7 @@ class RestClient
     public function get($uri, array $query = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $this->printArray($options);
         $response = $this->client->get($uri, array_merge($options, [
             'query' => $query,
@@ -466,7 +466,7 @@ class RestClient
     public function post($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $response = $this->client->post($uri, array_merge($options, [
             'form_params' => $data,
         ]));
@@ -485,7 +485,7 @@ class RestClient
     public function postMultipart($uri, array $multipart = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $response = $this->client->post($uri, array_merge($options, [
             'multipart' => $multipart,
         ]));
@@ -503,7 +503,7 @@ class RestClient
     public function postMultipartSimple($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $multipart = [];
         foreach ($data as $key => $value) {
             $multipart[] = [
@@ -527,7 +527,7 @@ class RestClient
      */
     public function head($uri, array $data = [], array $options = [], $api = true)
     {
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $response = $this->client->head($uri, array_merge($options, [
             'body' => $data,
         ]));
@@ -545,7 +545,7 @@ class RestClient
     public function put($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $response = $this->client->put($uri, array_merge($options, [
             'form_params' => $data,
         ]));
@@ -563,7 +563,7 @@ class RestClient
     public function patch($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $response = $this->client->patch($uri, array_merge($options, [
             'form_params' => $data,
         ]));
@@ -581,7 +581,7 @@ class RestClient
     public function delete($uri, array $data = [], array $options = [], $api = true)
     {
         $options = $this->configureOptions($options);
-        $uri = $api ? $uri . $this->getServiceConfig('api_url') : $uri;
+        $uri = $api ? $this->getServiceConfig('api_url') . $uri : $uri;
         $response = $this->client->delete($uri, array_merge($options, [
             'form_params' => $data,
         ]));
