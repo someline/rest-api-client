@@ -48,12 +48,22 @@ class RestClient
      */
     protected $oauth_tokens = [];
 
-    const TOKEN_TYPE_USER = 'user';
-    const TOKEN_TYPE_CLIENT = 'client';
+    // Grant Types
+    const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
+    const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
+    const GRANT_TYPE_PASSWORD = 'password';
+    const GRANT_TYPE_REFRESH_TOKEN = 'refresh_token';
 
-    protected $use_oauth_token = null;
+    protected $use_oauth_token_grant_type = null;
 
     protected $oauth_user_credentials = null;
+
+    protected $oauth_grant_request_data = [
+        self::GRANT_TYPE_CLIENT_CREDENTIALS => [],
+        self::GRANT_TYPE_AUTHORIZATION_CODE => [],
+        self::GRANT_TYPE_PASSWORD => [],
+        self::GRANT_TYPE_REFRESH_TOKEN => [],
+    ];
 
     /**
      * @var bool
@@ -210,6 +220,7 @@ class RestClient
     }
 
     /**
+     * @deprecated Please use setOAuthGrantRequestData() instead
      * @param $oauth_user_credentials
      */
     public function setOAuthUserCredentials($oauth_user_credentials)
@@ -223,6 +234,7 @@ class RestClient
     }
 
     /**
+     * @deprecated Please use getOAuthGrantRequestData() instead
      * @return null
      */
     protected function getOAuthUserCredentialsData()
@@ -231,6 +243,29 @@ class RestClient
             throw new RuntimeException('Please set "oauth_user_credentials" by calling setOAuthUserCredentialsData()!');
         }
         return $this->oauth_user_credentials;
+    }
+
+    /**
+     * @param $grant_type
+     * @param array $data
+     */
+    public function setOAuthGrantRequestData($grant_type, array $data)
+    {
+        $oauth_grant_request_data[$grant_type] = $data;
+        $this->useOAuthTokenFromCache();
+    }
+
+    /**
+     * @param $grant_type
+     * @return array
+     */
+    public function getOAuthGrantRequestData($grant_type)
+    {
+        if (!isset($oauth_grant_request_data[$grant_type])) {
+            throw new RuntimeException('Request Data was not found for grant type [' . $grant_type . '] in "oauth_grant_request_data"');
+        }
+        $data = $oauth_grant_request_data[$grant_type];
+        return array_merge($this->getClientData(), $data);
     }
 
     /**
@@ -259,8 +294,8 @@ class RestClient
         $headers['X-Client-Ip'] = $clientIp;
         $headers['X-Forwarded-For'] = $clientIp;
 
-        if ($this->use_oauth_token) {
-            $headers['Authorization'] = 'Bearer ' . $this->getOAuthToken($this->use_oauth_token);
+        if ($this->use_oauth_token_grant_type) {
+            $headers['Authorization'] = 'Bearer ' . $this->getOAuthToken($this->use_oauth_token_grant_type);
         }
 
         if (isset($options['headers'])) {
@@ -299,22 +334,19 @@ class RestClient
     }
 
     /**
-     * @param $type
+     * @param $grant_type
      * @return mixed
      */
-    private function getOAuthToken($type)
+    private function getOAuthToken($grant_type)
     {
         $grant_types = $this->getServiceConfig('oauth2_grant_types');
-        if (!isset($this->oauth_tokens[$type])) {
-            if ($type == self::TOKEN_TYPE_CLIENT) {
-                $this->postRequestAccessToken($grant_types['client_credentials'],
-                    array_merge($this->getClientData(), []));
-            } else if ($type == self::TOKEN_TYPE_USER) {
-                $this->postRequestAccessToken($grant_types['password'],
-                    array_merge($this->getClientData(), $this->getOAuthUserCredentialsData()));
-            }
+        if (!isset($this->oauth_tokens[$grant_type])) {
+            // request access token
+            $this->postRequestAccessToken($grant_type, $this->getOAuthGrantRequestData($grant_type));
+
+            // handle access token
             if ($this->getResponse()->getStatusCode() != 200) {
-                throw new RuntimeException('Failed to get access token!');
+                throw new RuntimeException('Failed to get access token for grant type [' . $grant_type . ']!');
             }
 
             $data = $this->getResponseData();
@@ -322,9 +354,9 @@ class RestClient
                 throw new RuntimeException('"access_token" is not exists in the response data!');
             }
             $access_token = $data['access_token'];
-            $this->setOAuthToken($type, $access_token);
+            $this->setOAuthToken($grant_type, $access_token);
         }
-        return $this->oauth_tokens[$type];
+        return $this->oauth_tokens[$grant_type];
     }
 
     /**
@@ -349,30 +381,45 @@ class RestClient
     }
 
     /**
-     * @param $type
+     * @param $grant_type
+     * @param array|null $requestData
      * @return $this
      */
-    public function withOAuthToken($type)
+    public function withOAuthToken($grant_type, $requestData = null)
     {
-        $this->getOAuthToken($type);
-        $this->use_oauth_token = $type;
+        if ($requestData !== null) {
+            $this->setOAuthGrantRequestData($grant_type, $requestData);
+        }
+        $this->getOAuthToken($grant_type);
+        $this->use_oauth_token_grant_type = $grant_type;
         return $this;
     }
 
     /**
+     * @param array|null $requestData
      * @return RestClient
      */
-    public function withOAuthTokenTypeUser()
+    public function withOAuthTokenTypePassword($requestData = null)
     {
-        return $this->withOAuthToken(self::TOKEN_TYPE_USER);
+        return $this->withOAuthToken(self::GRANT_TYPE_PASSWORD, $requestData);
     }
 
     /**
+     * @param array|null $requestData
      * @return RestClient
      */
-    public function withOAuthTokenTypeClient()
+    public function withOAuthTokenTypeClientCredentials($requestData = null)
     {
-        return $this->withOAuthToken(self::TOKEN_TYPE_CLIENT);
+        return $this->withOAuthToken(self::GRANT_TYPE_REFRESH_TOKEN, $requestData);
+    }
+
+    /**
+     * @param array|null $requestData
+     * @return RestClient
+     */
+    public function withOAuthTokenTypeAuthorizationCode($requestData = null)
+    {
+        return $this->withOAuthToken(self::GRANT_TYPE_AUTHORIZATION_CODE, $requestData);
     }
 
     /**
@@ -380,7 +427,7 @@ class RestClient
      */
     public function withoutOAuthToken()
     {
-        $this->use_oauth_token = null;
+        $this->use_oauth_token_grant_type = null;
         return $this;
     }
 
@@ -518,6 +565,14 @@ class RestClient
         ]));
         $this->setGuzzleResponse($response);
         return $this;
+    }
+
+    /**
+     * @return Psr\Http\Message\ResponseInterface
+     */
+    public function getGuzzleResponse()
+    {
+        return $this->guzzle_response;
     }
 
     /**
