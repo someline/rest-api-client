@@ -13,6 +13,7 @@ class RestClient
      * @var string
      */
     private $service_name;
+
     /**
      * @var string
      */
@@ -252,7 +253,7 @@ class RestClient
      */
     public function setOAuthGrantRequestData($grant_type, array $data)
     {
-        $oauth_grant_request_data[$grant_type] = $data;
+        $this->oauth_grant_request_data[$grant_type] = $data;
         $this->useOAuthTokenFromCache();
     }
 
@@ -262,10 +263,10 @@ class RestClient
      */
     public function getOAuthGrantRequestData($grant_type)
     {
-        if (!isset($oauth_grant_request_data[$grant_type])) {
+        if (!isset($this->oauth_grant_request_data[$grant_type])) {
             throw new RuntimeException('Request Data was not found for grant type [' . $grant_type . '] in "oauth_grant_request_data"');
         }
-        $data = $oauth_grant_request_data[$grant_type];
+        $data = $this->oauth_grant_request_data[$grant_type];
         return array_merge($this->getClientData(), $data);
     }
 
