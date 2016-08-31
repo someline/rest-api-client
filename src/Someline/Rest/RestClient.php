@@ -416,7 +416,7 @@ class RestClient
      */
     public function withOAuthTokenTypeClientCredentials($requestData = null)
     {
-        return $this->withOAuthToken(self::GRANT_TYPE_REFRESH_TOKEN, $requestData);
+        return $this->withOAuthToken(self::GRANT_TYPE_CLIENT_CREDENTIALS, $requestData);
     }
 
     /**
