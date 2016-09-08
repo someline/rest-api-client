@@ -292,9 +292,11 @@ class RestClient
         $headers = $this->getServiceConfig('headers');
 
         // add client ip to header
-        $clientIp = request()->getClientIp();
+        $request = request();
+        $clientIp = $request->getClientIp();
         $headers['X-Client-Ip'] = $clientIp;
         $headers['X-Forwarded-For'] = $clientIp;
+        $headers['Accept-Language'] = $request->header('Accept-Language', app()->getLocale());
 
         if ($this->use_oauth_token_grant_type) {
             $headers['Authorization'] = 'Bearer ' . $this->getOAuthToken($this->use_oauth_token_grant_type);
